@@ -15,7 +15,7 @@ server.get("/", (req: Request, res: Response) => {
 const port = PORT || 3000;
 
 server.listen(port, async () => {
-  console.log(`Subscription Tracker API is running on http://localhost:${port}`);
+  console.log(`Grindly API is running on http://localhost:${port}`);
   try {
     await connectDB();
   } catch (error) {

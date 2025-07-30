@@ -25,6 +25,12 @@ const taskSchema = new mongoose.Schema(
       default: null,
     },
 
+    frequency: {
+      type: String,
+      enum: ['once', 'daily', 'weekly', 'monthly'],
+      default: 'once'
+    },
+
     completed: {
       type: Boolean,
       default: false,
