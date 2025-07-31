@@ -16,12 +16,16 @@ You'll need to set the following environment variables in your Render dashboard:
 
 ### 2. Deployment Configuration
 
-This project includes a `render.yaml` file for easy deployment. Render will automatically:
-- Install dependencies with `npm ci`
-- Build the TypeScript code to JavaScript in the `dist/` folder with `npm run build`
-- Start the server with `node dist/server.js`
+This project uses a hybrid approach:
+- **Main server file**: `server.js` (JavaScript)
+- **Other modules**: TypeScript files (.ts)
+- **Runtime**: Uses `tsx` to run TypeScript directly without compilation
 
-**Important**: The `dist/` folder is not committed to Git (it's in .gitignore), so Render builds it during deployment.
+Render will automatically:
+- Install dependencies with `npm ci`
+- Start the server with `npm start` (which runs `tsx server.js`)
+
+**Important**: No build step required! The `tsx` runtime handles TypeScript compilation on-the-fly.
 
 ### 3. Manual Deployment Steps
 
@@ -29,8 +33,8 @@ If not using the render.yaml file:
 
 1. **Connect Repository**: Link your GitHub repository to Render
 2. **Service Type**: Choose "Web Service"
-3. **Build Command**: `npm ci && npm run build`
-4. **Start Command**: `node dist/server.js`
+3. **Build Command**: `npm ci`
+4. **Start Command**: `npm start`
 5. **Environment**: Node.js
 6. **Plan**: Free (or choose your preferred plan)
 

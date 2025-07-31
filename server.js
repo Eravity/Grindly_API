@@ -1,14 +1,14 @@
 import express from "express";
 
-import connectDB from "./database/mongodb.js";
-import { PORT } from "./config/env.js";
-import arcjetMiddleware from "./middleware/arcjet.middleware.js";
-import userRouter from "./routes/user.js";
-import authRouter from "./routes/auth.js";
-import taskRouter from "./routes/task.js";
-import rewardRouter from "./routes/reward.js";
-import eventLogRouter from "./routes/eventLog.js";
-import errorMiddleware from "./middleware/error.middleware.js";
+import connectDB from "./database/mongodb.ts";
+import { PORT } from "./config/env.ts";
+import arcjetMiddleware from "./middleware/arcjet.middleware.ts";
+import userRouter from "./routes/user.ts";
+import authRouter from "./routes/auth.ts";
+import taskRouter from "./routes/task.ts";
+import rewardRouter from "./routes/reward.ts";
+import eventLogRouter from "./routes/eventLog.ts";
+import errorMiddleware from "./middleware/error.middleware.ts";
 
 const server = express();
 

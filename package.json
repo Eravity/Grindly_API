@@ -2,11 +2,10 @@
   "name": "grindly",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/server.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node dist/server.js",
-    "dev": "nodemon server.ts",
-    "build": "tsc"
+    "start": "tsx server.js",
+    "dev": "tsx server.js --watch"
   },
   "keywords": [],
   "author": "",
@@ -20,17 +19,12 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.18.0",
     "mongoose": "^8.16.5",
-    "typescript": "^5.8.3"
+    "tsx": "^4.7.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.26.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^24.1.0",
-    "eslint": "^9.26.0",
-    "globals": "^16.1.0",
-    "nodemon": "^3.1.10",
-    "ts-node": "^10.9.2"
+    "@types/node": "^24.1.0"
   }
 }
