@@ -1,4 +1,4 @@
-import Task from "../models/task.model.ts";
+import Task from "../models/task.model.js";
 import type { Request, Response, NextFunction } from "express";
 
 // Custom error interface

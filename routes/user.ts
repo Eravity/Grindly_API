@@ -1,12 +1,12 @@
 import { Router } from "express";
-import authorize from "../middleware/auth.middleware.ts";
+import authorize from "../middleware/auth.middleware.js";
 import {
   getUsers,
   getUser,
   getCurrentUser,
   updateUser,
   getUserGamification,
-} from "../controllers/user.controller.ts";
+} from "../controllers/user.controller.js";
 
 const userRouter = Router();
 

@@ -1,4 +1,4 @@
-import User from "../models/user.model.ts";
+import User from "../models/user.model.js";
 import type { Request, Response, NextFunction } from "express";
 
 // Custom error interface

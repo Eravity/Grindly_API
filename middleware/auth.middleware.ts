@@ -11,8 +11,8 @@ declare global {
 }
 
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config/env.ts";
-import User from "../models/user.model.ts";
+import { JWT_SECRET } from "../config/env.js";
+import User from "../models/user.model.js";
 
 interface JwtPayload {
   userId: string;

@@ -1,11 +1,11 @@
 import { Router } from "express";
-import authorize from "../middleware/auth.middleware.ts";
+import authorize from "../middleware/auth.middleware.js";
 import {
   getEvents,
   getEventsByMetric,
   createEvent,
   getEventStats
-} from "../controllers/eventLog.controller.ts";
+} from "../controllers/eventLog.controller.js";
 
 const eventLogRouter = Router();
 

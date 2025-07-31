@@ -1,4 +1,4 @@
-import Reward from "../models/reward.model.ts";
+import Reward from "../models/reward.model.js";
 import type { Request, Response, NextFunction } from "express";
 
 // Custom error interface

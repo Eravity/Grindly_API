@@ -1,5 +1,5 @@
 import { Router } from "express";
-import authorize from "../middleware/auth.middleware.ts";
+import authorize from "../middleware/auth.middleware.js";
 import {
   getRewards,
   getReward,
@@ -9,7 +9,7 @@ import {
   claimReward,
   getAvailableRewards,
   getClaimedRewards
-} from "../controllers/reward.controller.ts";
+} from "../controllers/reward.controller.js";
 
 const rewardRouter = Router();
 

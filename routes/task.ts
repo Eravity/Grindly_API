@@ -1,5 +1,5 @@
 import { Router } from "express";
-import authorize from "../middleware/auth.middleware.ts";
+import authorize from "../middleware/auth.middleware.js";
 import {
   getTasks,
   getTask,
@@ -9,7 +9,7 @@ import {
   completeTask,
   getTasksByFrequency,
   getTaskStats
-} from "../controllers/task.controller.ts";
+} from "../controllers/task.controller.js";
 
 const taskRouter = Router();
 

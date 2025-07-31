@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import User from "../models/user.model.ts";
+import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env.ts";
+import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env.js";
 import type { Request, Response, NextFunction } from "express";
 
 // Custom error interface for HTTP errors
