@@ -17,9 +17,11 @@ You'll need to set the following environment variables in your Render dashboard:
 ### 2. Deployment Configuration
 
 This project includes a `render.yaml` file for easy deployment. Render will automatically:
-- Install dependencies with `npm install`
-- Build the TypeScript code with `npm run build`
-- Start the server with `npm start`
+- Install dependencies with `npm ci`
+- Build the TypeScript code to JavaScript in the `dist/` folder with `npm run build`
+- Start the server with `node dist/server.js`
+
+**Important**: The `dist/` folder is not committed to Git (it's in .gitignore), so Render builds it during deployment.
 
 ### 3. Manual Deployment Steps
 
