@@ -27,8 +27,8 @@ If not using the render.yaml file:
 
 1. **Connect Repository**: Link your GitHub repository to Render
 2. **Service Type**: Choose "Web Service"
-3. **Build Command**: `npm run render-build`
-4. **Start Command**: `npm start`
+3. **Build Command**: `npm ci && npm run build`
+4. **Start Command**: `node dist/server.js`
 5. **Environment**: Node.js
 6. **Plan**: Free (or choose your preferred plan)
 
