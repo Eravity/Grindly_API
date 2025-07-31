@@ -4,6 +4,8 @@ import connectDB from "./database/mongodb.ts";
 import { PORT } from "./config/env.ts";
 import arcjetMiddleware from "./middleware/arcjet.middleware.ts";
 import userRouter from "./routes/user.ts";
+import authRouter from "./routes/auth.ts";
+import errorMiddleware from "./middleware/error.middleware.ts";
 
 const server = express();
 
@@ -13,8 +15,9 @@ server.use(arcjetMiddleware);
 
 // server.use("/api/v1/auth", authRouter);
 server.use("/api/v1/users", userRouter);
-// server.use("/api/v1/subscriptions", subscriptionRouter);
+server.use("/api/v1/auth", authRouter);
 
+server.use(errorMiddleware)
 
 server.get("/", (req: Request, res: Response) => {
   res.send("Welcome to the Grindly API!");

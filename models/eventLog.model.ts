@@ -45,4 +45,6 @@ const userStatEventSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("UserStatEvent", userStatEventSchema);
+const UserStatEvent = mongoose.model("UserStatEvent", userStatEventSchema);
+
+export default UserStatEvent;
