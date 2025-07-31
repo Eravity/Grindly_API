@@ -4,8 +4,10 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "start": "node ./bin/www",
-    "dev": "nodemon server.ts"
+    "start": "node dist/server.js",
+    "dev": "nodemon server.ts",
+    "build": "tsc",
+    "prod": "npm run build && NODE_ENV=production node dist/server.js"
   },
   "keywords": [],
   "author": "",
