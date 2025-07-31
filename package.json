@@ -6,9 +6,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "dev": "nodemon server.ts",
-    "build": "rm -rf dist && npx tsc",
-    "build:check": "npm run build && ls -la dist/",
-    "prod": "npm run build && NODE_ENV=production node dist/server.js"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
