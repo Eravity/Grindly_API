@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import process from 'node:process';
 
 import { DB_URI, NODE_ENV } from "../config/env.js";
 

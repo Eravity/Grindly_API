@@ -1,5 +1,4 @@
 import { config } from "dotenv";
-import process from "node:process";
 
 // Load environment-specific .env file if it exists, otherwise load default .env
 const envFile = process.env.NODE_ENV 
