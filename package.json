@@ -2,12 +2,12 @@
   "name": "grindly",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "dist/server.js",
   "scripts": {
-    "start": "tsx server.js",
-    "dev": "tsx server.js --watch",
+    "start": "tsx server.ts",
+    "dev": "tsx server.ts --watch",
     "build": "tsc",
-    "prod": "node ./dist/server.js"
+    "prod": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
