@@ -1,5 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
-
+import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "../config/env.js";
+import User from "../models/user.model.js";
 // Extend the Request interface to include userId property
 declare global {
   namespace Express {
@@ -9,10 +11,6 @@ declare global {
     }
   }
 }
-
-import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config/env.js";
-import User from "../models/user.model.js";
 
 interface JwtPayload {
   userId: string;

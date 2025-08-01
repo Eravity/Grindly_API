@@ -3,8 +3,8 @@ services:
     name: grindly-api
     env: node
     plan: free
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: npm install && npm run build
+    startCommand: npm run prod
     envVars:
       - key: NODE_ENV
         value: production
