@@ -105,7 +105,7 @@ grindly/
 
 #### Register User
 ```http
-POST /api/v1/auth/register
+POST /api/v1/auth/sign-up
 Content-Type: application/json
 
 {
@@ -117,7 +117,7 @@ Content-Type: application/json
 
 #### Login User
 ```http
-POST /api/v1/auth/login
+POST /api/v1/auth/sign-in
 Content-Type: application/json
 
 {
@@ -130,11 +130,22 @@ Content-Type: application/json
 ```json
 {
   "success": true,
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "id": "user_id",
-    "username": "johndoe",
-    "email": "john@example.com"
+  "message": "User signed in successfully",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "user": {
+      "_id": "user_id",
+      "username": "johndoe",
+      "email": "john@example.com",
+      "gamification": {
+        "xp": 0,
+        "level": 1,
+        "coins": 0,
+        "streakCount": 0
+      },
+      "createdAt": "2025-08-02T12:00:00.000Z",
+      "updatedAt": "2025-08-02T12:00:00.000Z"
+    }
   }
 }
 ```
@@ -145,13 +156,32 @@ All user endpoints require authentication via `Authorization: Bearer <token>` he
 
 #### Get User Profile
 ```http
-GET /api/v1/users/profile
+GET /api/v1/users/me
 Authorization: Bearer <jwt-token>
+```
+
+#### Get User Gamification Data
+```http
+GET /api/v1/users/me/gamification
+Authorization: Bearer <jwt-token>
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "xp": 150,
+    "level": 3,
+    "coins": 45,
+    "streakCount": 7
+  }
+}
 ```
 
 #### Update User Profile
 ```http
-PUT /api/v1/users/profile
+PATCH /api/v1/users/me
 Authorization: Bearer <jwt-token>
 Content-Type: application/json
 
@@ -161,9 +191,14 @@ Content-Type: application/json
 }
 ```
 
-#### Delete User Account
+#### Get All Users (Public)
 ```http
-DELETE /api/v1/users/account
+GET /api/v1/users
+```
+
+#### Get User by ID
+```http
+GET /api/v1/users/:id
 Authorization: Bearer <jwt-token>
 ```
 
@@ -184,8 +219,10 @@ Content-Type: application/json
 {
   "title": "Complete project documentation",
   "description": "Write comprehensive API documentation",
-  "priority": "high",
-  "dueDate": "2025-08-15T10:00:00Z"
+  "frequency": "once",
+  "dueDate": "2025-08-15T10:00:00Z",
+  "xpReward": 10,
+  "coinReward": 2
 }
 ```
 
@@ -197,14 +234,16 @@ Authorization: Bearer <jwt-token>
 
 #### Update Task
 ```http
-PUT /api/v1/tasks/:id
+PATCH /api/v1/tasks/:id
 Authorization: Bearer <jwt-token>
 Content-Type: application/json
 
 {
   "title": "Updated task title",
-  "completed": false,
-  "priority": "medium"
+  "description": "Updated task description",
+  "frequency": "daily",
+  "xpReward": 15,
+  "coinReward": 3
 }
 ```
 
@@ -219,6 +258,35 @@ Authorization: Bearer <jwt-token>
 DELETE /api/v1/tasks/:id
 Authorization: Bearer <jwt-token>
 ```
+
+#### Get Task Statistics
+```http
+GET /api/v1/tasks/stats
+Authorization: Bearer <jwt-token>
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "totalTasks": 25,
+    "completedTasks": 18,
+    "pendingTasks": 7,
+    "completionRate": 72,
+    "totalXpEarned": 90,
+    "totalCoinsEarned": 36
+  }
+}
+```
+
+#### Get Tasks by Frequency
+```http
+GET /api/v1/tasks/frequency/:frequency
+Authorization: Bearer <jwt-token>
+```
+
+**Valid frequency values:** `once`, `daily`, `weekly`, `monthly`
 
 ### Reward Management Endpoints
 
@@ -235,10 +303,9 @@ Authorization: Bearer <jwt-token>
 Content-Type: application/json
 
 {
-  "name": "Task Master",
-  "description": "Complete 10 tasks",
-  "points": 100,
-  "type": "achievement"
+  "name": "Premium Coffee",
+  "description": "Buy yourself a premium coffee",
+  "coinCost": 10
 }
 ```
 
@@ -250,19 +317,37 @@ Authorization: Bearer <jwt-token>
 
 #### Update Reward
 ```http
-PUT /api/v1/rewards/:id
+PATCH /api/v1/rewards/:id
 Authorization: Bearer <jwt-token>
 Content-Type: application/json
 
 {
   "name": "Updated reward name",
-  "points": 150
+  "coinCost": 15
 }
 ```
 
 #### Delete Reward
 ```http
 DELETE /api/v1/rewards/:id
+Authorization: Bearer <jwt-token>
+```
+
+#### Claim Reward
+```http
+PATCH /api/v1/rewards/:id/claim
+Authorization: Bearer <jwt-token>
+```
+
+#### Get Available Rewards
+```http
+GET /api/v1/rewards/available
+Authorization: Bearer <jwt-token>
+```
+
+#### Get Claimed Rewards
+```http
+GET /api/v1/rewards/claimed
 Authorization: Bearer <jwt-token>
 ```
 
@@ -274,10 +359,7 @@ GET /api/v1/events
 Authorization: Bearer <jwt-token>
 ```
 
-**Query Parameters:**
-- `limit` - Number of events to return (default: 50)
-- `page` - Page number for pagination (default: 1)
-- `type` - Filter by event type
+Returns all events for the current user, sorted by creation date (newest first).
 
 #### Create Event Log
 ```http
@@ -286,14 +368,52 @@ Authorization: Bearer <jwt-token>
 Content-Type: application/json
 
 {
-  "type": "task_completed",
-  "description": "User completed task: Complete documentation",
-  "metadata": {
+  "metric": "xp",
+  "type": "gain",
+  "source": "task_completed",
+  "value": 10,
+  "meta": {
     "taskId": "task_id_here",
-    "points": 50
+    "taskTitle": "Complete documentation"
+  },
+  "note": "Completed documentation task"
+}
+```
+
+#### Get Event Statistics
+```http
+GET /api/v1/events/stats
+Authorization: Bearer <jwt-token>
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "xp": {
+      "gained": 150,
+      "spent": 20,
+      "net": 130
+    },
+    "coins": {
+      "gained": 75,
+      "spent": 15,
+      "net": 60
+    }
   }
 }
 ```
+
+#### Get Events by Metric
+```http
+GET /api/v1/events/metric/:metric
+Authorization: Bearer <jwt-token>
+```
+
+**Valid metric values:** `xp`, `coins`
+
+Returns events filtered by the specified metric, sorted by creation date (newest first).
 
 ## 🔒 Authentication
 
@@ -425,21 +545,17 @@ The application supports deployment on:
 ```typescript
 {
   _id: ObjectId,
-  username: string,
-  email: string,
-  password: string, // hashed
-  createdAt: Date,
-  updatedAt: Date,
-  profile: {
-    firstName?: string,
-    lastName?: string,
-    avatar?: string
+  username: string, // 2-30 characters
+  email: string, // unique, lowercase
+  password: string, // hashed, min 8 characters
+  gamification: {
+    xp: number, // default: 0
+    level: number, // default: 1
+    coins: number, // default: 0
+    streakCount: number // default: 0
   },
-  stats: {
-    tasksCompleted: number,
-    totalPoints: number,
-    level: number
-  }
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
@@ -447,17 +563,22 @@ The application supports deployment on:
 ```typescript
 {
   _id: ObjectId,
-  userId: ObjectId,
-  title: string,
+  user: ObjectId, // ref to User
+  title: string, // max 100 characters
   description?: string,
-  completed: boolean,
-  priority: 'low' | 'medium' | 'high',
   dueDate?: Date,
-  createdAt: Date,
-  updatedAt: Date,
+  frequency: 'once' | 'daily' | 'weekly' | 'monthly', // default: 'once'
+  completed: boolean, // default: false
+  xpReward: number, // default: 5, range: 0-100
+  coinReward: number, // default: 1, range: 0-50
   completedAt?: Date,
-  tags?: string[],
-  points: number
+  // AI fields
+  aiXpReward?: number, // range: 0-100
+  aiCoinReward?: number, // range: 0-50
+  aiSuggested: boolean, // default: false
+  aiScoringStatus: 'pending' | 'done' | 'failed', // default: 'pending'
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
@@ -465,33 +586,35 @@ The application supports deployment on:
 ```typescript
 {
   _id: ObjectId,
-  userId: ObjectId,
+  user: ObjectId, // ref to User
   name: string,
-  description: string,
-  type: 'achievement' | 'badge' | 'points',
-  points: number,
-  earned: boolean,
-  earnedAt?: Date,
+  description?: string,
+  coinCost: number, // min: 0
+  claimed: boolean, // default: false
+  claimedAt?: Date,
+  isActive: boolean, // default: true
+  // AI fields
+  aiRewardEstimation?: number, // range: 0-50
+  aiSuggested: boolean, // default: false
+  aiScoringStatus: 'pending' | 'done' | 'failed', // default: 'pending'
   createdAt: Date,
-  requirements?: {
-    tasksCompleted?: number,
-    pointsRequired?: number,
-    timeframe?: string
-  }
+  updatedAt: Date
 }
 ```
 
-### Event Log Model
+### Event Log Model (UserStatEvent)
 ```typescript
 {
   _id: ObjectId,
-  userId: ObjectId,
-  type: string,
-  description: string,
-  timestamp: Date,
-  metadata?: any,
-  ipAddress?: string,
-  userAgent?: string
+  user: ObjectId, // ref to User
+  metric: 'xp' | 'coins',
+  type: 'gain' | 'spend',
+  source: 'task_completed' | 'daily_bonus' | 'reward_claimed' | 'admin_adjustment',
+  value: number, // min: 0
+  meta?: Object, // additional metadata
+  note?: string,
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
@@ -510,13 +633,37 @@ The application supports deployment on:
 ```json
 {
   "success": false,
-  "error": {
-    "code": "ERROR_CODE",
-    "message": "Human readable error message",
-    "details": { /* additional error info */ }
-  }
+  "message": "Human readable error message"
 }
 ```
+
+**Common Error Examples:**
+
+**401 Unauthorized:**
+```json
+{
+  "success": false,
+  "message": "Unauthorized access, no token provided"
+}
+```
+
+**404 Not Found:**
+```json
+{
+  "success": false,
+  "message": "Task not found"
+}
+```
+
+**400 Bad Request:**
+```json
+{
+  "success": false,
+  "message": "Reward already claimed"
+}
+```
+
+**Note:** Some error responses may include additional details depending on the error type.
 
 ### Pagination Response
 ```json
@@ -538,7 +685,7 @@ The application supports deployment on:
 
 **Login:**
 ```bash
-curl -X POST http://localhost:3000/api/v1/auth/login \
+curl -X POST http://localhost:3000/api/v1/auth/sign-in \
   -H "Content-Type: application/json" \
   -d '{"email":"user@example.com","password":"password123"}'
 ```
