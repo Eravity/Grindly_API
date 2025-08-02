@@ -42,11 +42,10 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
       { session }
     );
     
-    // Create JWT token
+    // Create JWT token (no expiration)
     const token = jwt.sign(
       { userId: newUsers[0]._id.toString() },
-      JWT_SECRET as string,
-      { expiresIn: JWT_EXPIRES_IN || "1d" } as jwt.SignOptions
+      JWT_SECRET as string
     );
     await session.commitTransaction();
     session.endSession();
@@ -94,8 +93,7 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
 
     const token = jwt.sign(
       { userId: user._id.toString() },
-      JWT_SECRET as string,
-      { expiresIn: JWT_EXPIRES_IN || "30d" } as jwt.SignOptions
+      JWT_SECRET as string
     );
 
     res.status(200).json({
