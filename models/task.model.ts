@@ -17,7 +17,7 @@ interface ITask {
   aiXpReward?: number | null;
   aiCoinReward?: number | null;
   aiSuggested: boolean;
-  aiScoringStatus: "pending" | "done" | "failed";
+  status: "pending" | "done" | "failed";
 }
 
 type TaskDoc = Document & ITask;
@@ -48,9 +48,9 @@ const taskSchema = new Schema<TaskDoc>(
     aiXpReward: {type: Number, default: null, min: 0, max: 100},
     aiCoinReward: {type: Number, default: null, min: 0, max: 50},
     aiSuggested: {type: Boolean, default: false},
-    aiScoringStatus: {
+    status: {
       type: String,
-      enum: ["pending", "done", "failed"],
+      enum: ["new", "in_progress", "blocked", "done", "missed", "canceled"],
       default: "pending",
     },
   },
