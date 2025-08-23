@@ -1,11 +1,4 @@
-import mongoose, {
-  Schema,
-  Types,
-  type Document,
-  type Query,
-  type UpdateQuery,
-  type CallbackWithoutResultAndOptionalError
-} from "mongoose";
+import mongoose, {type CallbackWithoutResultAndOptionalError, type Document, type Query, Schema, Types, type UpdateQuery} from "mongoose";
 
 interface ITask {
   user: Types.ObjectId;
@@ -19,6 +12,8 @@ interface ITask {
   completedAt?: Date | null;
   deadline?: Date | null;
   missedDeadline: boolean;
+  priority?: "low" | "medium" | "high";
+  additionalComments?: string;
   aiXpReward?: number | null;
   aiCoinReward?: number | null;
   aiSuggested: boolean;
@@ -29,31 +24,37 @@ type TaskDoc = Document & ITask;
 
 const taskSchema = new Schema<TaskDoc>(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    title: { type: String, required: true, trim: true, maxlength: 100 },
-    description: { type: String, trim: true },
-    dueDate: { type: Date, default: null },
+    user: {type: Schema.Types.ObjectId, ref: "User", required: true},
+    title: {type: String, required: true, trim: true, maxlength: 100},
+    description: {type: String, trim: true},
+    dueDate: {type: Date, default: null},
     frequency: {
       type: String,
       enum: ["once", "daily", "weekly", "monthly"],
       default: "once",
     },
-    completed: { type: Boolean, default: false },
-    xpReward: { type: Number, default: 5, min: 0, max: 100 },
-    coinReward: { type: Number, default: 1, min: 0, max: 50 },
-    completedAt: { type: Date, default: null },
-    deadline: { type: Date, default: null },
-    missedDeadline: { type: Boolean, default: false },
-    aiXpReward: { type: Number, default: null, min: 0, max: 100 },
-    aiCoinReward: { type: Number, default: null, min: 0, max: 50 },
-    aiSuggested: { type: Boolean, default: false },
+    completed: {type: Boolean, default: false},
+    xpReward: {type: Number, default: 5, min: 0, max: 100},
+    coinReward: {type: Number, default: 1, min: 0, max: 50},
+    completedAt: {type: Date, default: null},
+    deadline: {type: Date, default: null},
+    missedDeadline: {type: Boolean, default: false},
+    priority: {
+      type: String,
+      enum: ["low", "medium", "high"],
+      default: "medium",
+    },
+    additionalComments: [{type: String, trim: true}],
+    aiXpReward: {type: Number, default: null, min: 0, max: 100},
+    aiCoinReward: {type: Number, default: null, min: 0, max: 50},
+    aiSuggested: {type: Boolean, default: false},
     aiScoringStatus: {
       type: String,
       enum: ["pending", "done", "failed"],
       default: "pending",
     },
   },
-  { timestamps: true }
+  {timestamps: true}
 );
 
 taskSchema.pre<TaskDoc>("save", function (next) {
